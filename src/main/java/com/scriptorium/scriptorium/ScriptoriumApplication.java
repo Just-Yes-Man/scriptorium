@@ -2,6 +2,8 @@ package com.scriptorium.scriptorium;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.*;
 
 @SpringBootApplication
 public class ScriptoriumApplication {
@@ -10,4 +12,16 @@ public class ScriptoriumApplication {
 		SpringApplication.run(ScriptoriumApplication.class, args);
 	}
 
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+						.allowedOrigins("http://localhost:8081")
+						.allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowCredentials(true);
+			}
+		};
+	}
 }
