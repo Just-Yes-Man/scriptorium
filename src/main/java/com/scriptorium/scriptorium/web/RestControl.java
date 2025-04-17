@@ -12,55 +12,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scriptorium.scriptorium.domain.Bibliotecario;
-import com.scriptorium.scriptorium.infrastructure.repositories.BibliotecariosRepository;
+import com.scriptorium.scriptorium.Service.BibliotecarioService;
+import com.scriptorium.scriptorium.dto.BibliotecarioRequestDTO;
+import com.scriptorium.scriptorium.dto.BibliotecarioResponseDTO;
+
 
 @RestController
 @RequestMapping("/bibliotecarios")
 public class RestControl {
 
-    private final BibliotecariosRepository repo;
+       private final BibliotecarioService service;
 
-    public RestControl(BibliotecariosRepository repo) {
-        this.repo = repo;
+    public RestControl(BibliotecarioService service) {
+        this.service = service;
     }
 
+    
     @GetMapping
-    public List<Bibliotecario> listar() {
-        return repo.findAll();
+    public List<BibliotecarioResponseDTO> listar() {
+        return service.listar();
     }
 
+    
     @PostMapping
-    public Bibliotecario guardar(@RequestBody Bibliotecario ent) {
-        return repo.save(ent);
+    public BibliotecarioResponseDTO guardar(@RequestBody BibliotecarioRequestDTO dto) {
+        return service.guardar(dto);
     }
 
+    
     @GetMapping("/{id}")
-    public ResponseEntity<Bibliotecario> obtenerPorId(@PathVariable Long id) {
-        return repo.findById(id)
-                .map(b -> ResponseEntity.ok(b))
+    public ResponseEntity<BibliotecarioResponseDTO> obtenerPorId(@PathVariable Long id) {
+        return service.obtenerPorId(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+   
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        if (repo.existsById(id)) {
-            repo.deleteById(id);
-            return ResponseEntity.noContent().build(); // 204 No Content
+        if (service.eliminar(id)) {
+            return ResponseEntity.noContent().build(); // 204
         } else {
-            return ResponseEntity.notFound().build(); // 404 Not Found
+            return ResponseEntity.notFound().build(); // 404
         }
     }
 
+    
     @PutMapping("/{id}")
-    public ResponseEntity<Bibliotecario> actualizarBibliotecario(@PathVariable Long id,
-            @RequestBody Bibliotecario NewBibliotecario) {
-        return repo.findById(id)
-                .map(b -> {
-                    b.setUsuario(NewBibliotecario.getUsuario());
-                    b.setContraseña(NewBibliotecario.getContraseña());
-                    return ResponseEntity.ok(repo.save(b));
-                })
+    public ResponseEntity<BibliotecarioResponseDTO> actualizar(@PathVariable Long id,
+            @RequestBody BibliotecarioRequestDTO dto) {
+        return service.actualizar(id, dto)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 }
