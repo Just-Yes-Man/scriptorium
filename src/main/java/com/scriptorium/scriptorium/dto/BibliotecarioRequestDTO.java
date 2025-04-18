@@ -19,5 +19,5 @@ public class BibliotecarioRequestDTO {
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
     }
-    
+
 }

@@ -16,30 +16,26 @@ import com.scriptorium.scriptorium.Service.BibliotecarioService;
 import com.scriptorium.scriptorium.dto.BibliotecarioRequestDTO;
 import com.scriptorium.scriptorium.dto.BibliotecarioResponseDTO;
 
-
 @RestController
 @RequestMapping("/bibliotecarios")
-public class RestControl {
+public class BibliotecaControl {
 
-       private final BibliotecarioService service;
+    private final BibliotecarioService service;
 
-    public RestControl(BibliotecarioService service) {
+    public BibliotecaControl(BibliotecarioService service) {
         this.service = service;
     }
 
-    
     @GetMapping
     public List<BibliotecarioResponseDTO> listar() {
         return service.listar();
     }
 
-    
     @PostMapping
     public BibliotecarioResponseDTO guardar(@RequestBody BibliotecarioRequestDTO dto) {
         return service.guardar(dto);
     }
 
-    
     @GetMapping("/{id}")
     public ResponseEntity<BibliotecarioResponseDTO> obtenerPorId(@PathVariable Long id) {
         return service.obtenerPorId(id)
@@ -47,7 +43,6 @@ public class RestControl {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-   
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         if (service.eliminar(id)) {
@@ -57,7 +52,6 @@ public class RestControl {
         }
     }
 
-    
     @PutMapping("/{id}")
     public ResponseEntity<BibliotecarioResponseDTO> actualizar(@PathVariable Long id,
             @RequestBody BibliotecarioRequestDTO dto) {
