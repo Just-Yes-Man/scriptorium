@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main  # O la rama que desees
+      - master  # O la rama que desees
 
 jobs:
   build-and-push:
