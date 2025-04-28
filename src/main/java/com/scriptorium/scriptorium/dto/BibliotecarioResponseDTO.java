@@ -3,6 +3,7 @@ package com.scriptorium.scriptorium.dto;
 public class BibliotecarioResponseDTO {
     private Long id;
     private String usuario;
+    
 
     public BibliotecarioResponseDTO() {}
 

@@ -1,7 +1,5 @@
 package com.scriptorium.scriptorium.Service;
 
-
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,6 +29,10 @@ public class UsuarioService {
     public UsuarioResponseDTO guardar(UsuarioRequestDTO dto) {
         Usuario nuevo = new Usuario();
         nuevo.setNombre(dto.getNombre());
+        nuevo.setFechaNacimiento(dto.getFechaNacimiento());
+        nuevo.setDireccion(dto.getDireccion());
+        nuevo.setContacto(dto.getContacto());
+        nuevo.setFotografia(dto.getFotografia());
         nuevo.setClave(dto.getClave());
         Usuario guardado = repo.save(nuevo);
         return new UsuarioResponseDTO(guardado.getIdUsuario(), guardado.getNombre(), guardado.getFechaNacimiento(), guardado.getDireccion(), guardado.getContacto(), guardado.getFotografia(), guardado.getClave());
@@ -53,6 +55,10 @@ public class UsuarioService {
         return repo.findById(id)
                 .map(b -> {
                     b.setNombre(dto.getNombre());
+                    b.setClave(dto.getClave());
+                    b.setDireccion(dto.getDireccion());
+                    b.setContacto(dto.getContacto());
+                    b.setFotografia(dto.getFotografia());
                     b.setClave(dto.getClave());
                     Usuario actualizado = repo.save(b);
                     return new UsuarioResponseDTO(actualizado.getIdUsuario(), actualizado.getNombre(), actualizado.getFechaNacimiento(), actualizado.getDireccion(), actualizado.getContacto(), actualizado.getFotografia(), actualizado.getClave());

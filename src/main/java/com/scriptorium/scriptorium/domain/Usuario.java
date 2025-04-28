@@ -1,6 +1,9 @@
 package com.scriptorium.scriptorium.domain;
 
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +19,7 @@ public class Usuario {
     private String nombre;
     private String direccion;
 
-    @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
     private String contacto;
     private String fotografia;
