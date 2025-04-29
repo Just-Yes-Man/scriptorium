@@ -9,16 +9,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.scriptorium.scriptorium.domain.Bibliotecario;
-import com.scriptorium.scriptorium.infrastructure.repositories.BibliotecariosRepository;
+import com.scriptorium.scriptorium.infrastructure.repositories.BibliotecarioRepository;
 import com.scriptorium.scriptorium.dto.BibliotecarioRequestDTO;
 import com.scriptorium.scriptorium.dto.BibliotecarioResponseDTO;
 
 @Service
 public class BibliotecarioService {
 
-    private final BibliotecariosRepository repo;
+    private final BibliotecarioRepository repo;
 
-    public BibliotecarioService(BibliotecariosRepository repo) {
+    public BibliotecarioService(BibliotecarioRepository repo) {
         this.repo = repo;
     }
 

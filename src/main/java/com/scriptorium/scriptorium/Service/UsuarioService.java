@@ -7,16 +7,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.scriptorium.scriptorium.domain.Usuario;
-import com.scriptorium.scriptorium.infrastructure.repositories.UsuariosRepository;
+import com.scriptorium.scriptorium.infrastructure.repositories.UsuarioRepository;
 import com.scriptorium.scriptorium.dto.UsuarioRequestDTO;
 import com.scriptorium.scriptorium.dto.UsuarioResponseDTO;
 
 @Service
 public class UsuarioService {
 
-    private final UsuariosRepository repo;
+    private final UsuarioRepository repo;
 
-    public UsuarioService(UsuariosRepository repo) {
+    public UsuarioService(UsuarioRepository repo) {
         this.repo = repo;
     }
 
