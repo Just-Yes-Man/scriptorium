@@ -10,10 +10,12 @@ import com.scriptorium.scriptorium.domain.Prestamo;
 import com.scriptorium.scriptorium.domain.Usuario;
 import com.scriptorium.scriptorium.domain.Libro;
 import com.scriptorium.scriptorium.domain.Bibliotecario;
+import com.scriptorium.scriptorium.domain.Inventario;
 import com.scriptorium.scriptorium.infrastructure.repositories.PrestamoRepository;
 import com.scriptorium.scriptorium.infrastructure.repositories.UsuarioRepository;
 import com.scriptorium.scriptorium.infrastructure.repositories.LibroRepository;
 import com.scriptorium.scriptorium.infrastructure.repositories.BibliotecarioRepository;
+import com.scriptorium.scriptorium.infrastructure.repositories.InventarioRepository;
 import com.scriptorium.scriptorium.dto.PrestamoRequestDTO;
 import com.scriptorium.scriptorium.dto.PrestamoResponseDTO;
 
@@ -24,13 +26,15 @@ public class PrestamoService {
     private final UsuarioRepository usuarioRepo;
     private final LibroRepository libroRepo;
     private final BibliotecarioRepository bibliotecarioRepo;
+    private final InventarioRepository inventarioRepo;
 
     public PrestamoService(PrestamoRepository prestamoRepo, UsuarioRepository usuarioRepo, 
-                            LibroRepository libroRepo, BibliotecarioRepository bibliotecarioRepo) {
+                            LibroRepository libroRepo, BibliotecarioRepository bibliotecarioRepo, InventarioRepository inventarioRepo) {
         this.prestamoRepo = prestamoRepo;
         this.usuarioRepo = usuarioRepo;
         this.libroRepo = libroRepo;
         this.bibliotecarioRepo = bibliotecarioRepo;
+        this.inventarioRepo = inventarioRepo;
     }
 
     public List<PrestamoResponseDTO> listar() {
@@ -43,6 +47,7 @@ public class PrestamoService {
                         p.getBibliotecario() != null ? p.getBibliotecario().getIdBibliotecario() : 0,
                         p.isActivo(),
                         p.isMultado(),
+                        p.isDevuelto(),
                         p.getEstadoPrestamo(),
                         p.getEstadoDevuelto(),
                         p.getFechaInicio(),
@@ -59,6 +64,16 @@ public class PrestamoService {
         Bibliotecario bibliotecario = bibliotecarioRepo.findById(dto.getBibliotecarioId())
                 .orElseThrow(() -> new RuntimeException("Bibliotecario no encontrado"));
 
+        Inventario inventario = inventarioRepo.findByLibro(libro)
+                .orElseThrow(() -> new RuntimeException("Inventario no encontrado para libro"));
+
+        if(inventario.getStock() <= 0){
+            throw new RuntimeException("No hay ejemplares disponibles para préstamo");
+        }
+
+        inventario.setStock(inventario.getStock() - 1);
+        inventarioRepo.save(inventario);
+
         Prestamo nuevo = new Prestamo();
         nuevo.setFicha(dto.getFicha());
         nuevo.setUsuario(usuario);
@@ -70,6 +85,7 @@ public class PrestamoService {
         nuevo.setEstadoDevuelto(dto.getEstadoDevuelto());
         nuevo.setFechaInicio(dto.getFechaInicio());
         nuevo.setFechaFin(dto.getFechaFin());
+        nuevo.setDevuelto(false);
 
         Prestamo guardado = prestamoRepo.save(nuevo);
 
@@ -81,6 +97,7 @@ public class PrestamoService {
                 guardado.getBibliotecario() != null ? guardado.getBibliotecario().getIdBibliotecario() : 0,
                 guardado.isActivo(),
                 guardado.isMultado(),
+                guardado.isDevuelto(),
                 guardado.getEstadoPrestamo(),
                 guardado.getEstadoDevuelto(),
                 guardado.getFechaInicio(),
@@ -98,6 +115,7 @@ public class PrestamoService {
                         p.getBibliotecario() != null ? p.getBibliotecario().getIdBibliotecario() : 0,
                         p.isActivo(),
                         p.isMultado(),
+                        p.isDevuelto(),
                         p.getEstadoPrestamo(),
                         p.getEstadoDevuelto(),
                         p.getFechaInicio(),
@@ -129,6 +147,7 @@ public class PrestamoService {
                     p.setBibliotecario(bibliotecario);
                     p.setActivo(dto.isActivo());
                     p.setMultado(dto.isMultado());
+                    p.setDevuelto(dto.isDevuelto());
                     p.setEstadoPrestamo(dto.getEstadoPrestamo());
                     p.setEstadoDevuelto(dto.getEstadoDevuelto());
                     p.setFechaInicio(dto.getFechaInicio());
@@ -144,6 +163,7 @@ public class PrestamoService {
                             actualizado.getBibliotecario() != null ? actualizado.getBibliotecario().getIdBibliotecario() : 0,
                             actualizado.isActivo(),
                             actualizado.isMultado(),
+                            actualizado.isDevuelto(),
                             actualizado.getEstadoPrestamo(),
                             actualizado.getEstadoDevuelto(),
                             actualizado.getFechaInicio(),
@@ -151,4 +171,39 @@ public class PrestamoService {
                     );
                 });
     }
+
+    public PrestamoResponseDTO devolverLibro(Long prestamoId) {
+        Prestamo prestamo = prestamoRepo.findById(prestamoId)
+                .orElseThrow(() -> new RuntimeException("Préstamo no encontrado"));
+    
+        if (prestamo.isDevuelto()) {
+            throw new RuntimeException("Este préstamo ya fue marcado como devuelto");
+        }
+    
+        Libro libro = prestamo.getLibro();
+        Inventario inventario = inventarioRepo.findByLibro(libro)
+                .orElseThrow(() -> new RuntimeException("Inventario no encontrado"));
+    
+        inventario.setStock(inventario.getStock() + 1);
+        inventarioRepo.save(inventario);
+    
+        prestamo.setDevuelto(true);
+        Prestamo actualizado = prestamoRepo.save(prestamo);
+    
+        return new PrestamoResponseDTO(
+                actualizado.getIdPrestamo(),
+                actualizado.getFicha(),
+                actualizado.getUsuario() != null ? actualizado.getUsuario().getIdUsuario() : 0,
+                actualizado.getLibro() != null ? actualizado.getLibro().getIdLibro() : 0,
+                actualizado.getBibliotecario() != null ? actualizado.getBibliotecario().getIdBibliotecario() : 0,
+                actualizado.isActivo(),
+                actualizado.isMultado(),
+                actualizado.isDevuelto(),
+                actualizado.getEstadoPrestamo(),
+                actualizado.getEstadoDevuelto(),
+                actualizado.getFechaInicio(),
+                actualizado.getFechaFin()
+        );
+    }
+    
 }

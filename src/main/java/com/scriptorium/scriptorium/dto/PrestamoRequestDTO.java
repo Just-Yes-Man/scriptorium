@@ -10,6 +10,7 @@ public class PrestamoRequestDTO {
     private Long bibliotecarioId;
     private boolean activo;
     private boolean multado;
+    private boolean devuelto;
     private String estadoPrestamo;
     private String estadoDevuelto;
     private LocalDate fechaInicio;
@@ -95,5 +96,13 @@ public class PrestamoRequestDTO {
 
     public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public boolean isDevuelto() {
+        return devuelto;
+    }
+
+    public void setDevuelto(boolean devuelto) {
+        this.devuelto = devuelto;
     }
 }

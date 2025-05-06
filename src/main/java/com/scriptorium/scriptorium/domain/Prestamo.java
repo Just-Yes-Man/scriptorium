@@ -13,10 +13,12 @@ public class Prestamo {
     private String ficha;
     private boolean activo;
     private boolean multado;
+    private boolean devuelto;
     private String estadoPrestamo;
     private String estadoDevuelto;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
+
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -34,6 +36,14 @@ public class Prestamo {
 
     public Long getIdPrestamo() {
         return idPrestamo;
+    }
+
+    public boolean isDevuelto() {
+        return devuelto;
+    }
+
+    public void setDevuelto(boolean devuelto) {
+        this.devuelto = devuelto;
     }
 
     public void setIdPrestamo(Long idPrestamo) {

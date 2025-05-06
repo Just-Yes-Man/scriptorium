@@ -11,13 +11,14 @@ public class PrestamoResponseDTO {
     private Long bibliotecarioId;
     private boolean activo;
     private boolean multado;
+    private boolean devuelto;
     private String estadoPrestamo;
     private String estadoDevuelto;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
 
     public PrestamoResponseDTO(Long idPrestamo, String ficha, Long usuarioId, Long libroId, Long bibliotecarioId,
-                               boolean activo, boolean multado, String estadoPrestamo, String estadoDevuelto,
+                               boolean activo, boolean multado, boolean devuelto,String estadoPrestamo, String estadoDevuelto,
                                LocalDate fechaInicio, LocalDate fechaFin) {
         this.idPrestamo = idPrestamo;
         this.ficha = ficha;
@@ -26,6 +27,7 @@ public class PrestamoResponseDTO {
         this.bibliotecarioId = bibliotecarioId;
         this.activo = activo;
         this.multado = multado;
+        this.devuelto = devuelto;
         this.estadoPrestamo = estadoPrestamo;
         this.estadoDevuelto = estadoDevuelto;
         this.fechaInicio = fechaInicio;
@@ -33,6 +35,7 @@ public class PrestamoResponseDTO {
     }
 
     // Getters y Setters
+    
 
     public Long getIdPrestamo() {
         return idPrestamo;
@@ -121,4 +124,13 @@ public class PrestamoResponseDTO {
     public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
+
+    public boolean isDevuelto() {
+        return devuelto;
+    }
+    
+    public void setDevuelto(boolean devuelto) {
+        this.devuelto = devuelto;
+    }
+
 }

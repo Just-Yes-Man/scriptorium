@@ -59,4 +59,15 @@ public class PrestamoControl {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/devolver/{id}")
+    public ResponseEntity<PrestamoResponseDTO> devolverLibro(@PathVariable Long id) {
+        try {
+            PrestamoResponseDTO dto = service.devolverLibro(id);
+            return ResponseEntity.ok(dto);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
