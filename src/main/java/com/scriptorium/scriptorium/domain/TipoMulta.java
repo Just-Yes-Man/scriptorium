@@ -1,5 +1,6 @@
 package com.scriptorium.scriptorium.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +12,9 @@ public class TipoMulta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTipoMulta;
 
+    @Column(length = 50)
     private String tipo;
+    @Column(length = 50)
     private String descripcion;
 
     public Long getIdTipoMulta() {

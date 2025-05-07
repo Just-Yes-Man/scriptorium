@@ -1,5 +1,6 @@
 package com.scriptorium.scriptorium.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,14 +14,18 @@ public class Libro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idLibro;
+    @Column(length = 100)
     private String titulo;
+    @Column(length = 200)
     private String autor;
+    @Column(length = 100)
     private String isbn;
+    @Column(length = 13)
     private double precio;
 
     @ManyToOne
     @JoinColumn(name = "genero_id", nullable = false)
-    private Genero genero; 
+    private Genero genero;
 
     // Getters y Setters
     public long getIdLibro() {

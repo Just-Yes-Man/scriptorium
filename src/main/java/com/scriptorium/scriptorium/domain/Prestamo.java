@@ -10,15 +10,17 @@ public class Prestamo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPrestamo;
 
+    @Column(length = 50)
     private String ficha;
     private boolean activo;
     private boolean multado;
     private boolean devuelto;
+    @Column(length = 50)
     private String estadoPrestamo;
+    @Column(length = 50)
     private String estadoDevuelto;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
-
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)

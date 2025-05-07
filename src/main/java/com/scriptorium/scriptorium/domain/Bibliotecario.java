@@ -1,5 +1,6 @@
 package com.scriptorium.scriptorium.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,8 +11,9 @@ public class Bibliotecario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idBibliotecario;
-
+    @Column(length = 100)
     private String usuario;
+    @Column(length = 200)
     private String contraseña;
 
     public Long getIdBibliotecario() {
