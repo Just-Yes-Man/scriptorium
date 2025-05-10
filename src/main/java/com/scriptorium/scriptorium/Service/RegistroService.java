@@ -12,6 +12,7 @@ import com.scriptorium.scriptorium.infrastructure.repositories.BibliotecarioRepo
 import com.scriptorium.scriptorium.infrastructure.repositories.RegistroRepository;
 import com.scriptorium.scriptorium.dto.RegistroRequestDTO;
 import com.scriptorium.scriptorium.dto.RegistroResponseDTO;
+import static com.scriptorium.scriptorium.Service.HelperError.BIBLIOTECARIO_NO_ENCONTRADO;;
 
 @Service
 public class RegistroService {
@@ -26,20 +27,22 @@ public class RegistroService {
 
     public List<RegistroResponseDTO> listar() {
         return repo.findAll().stream()
-                .map(b -> new RegistroResponseDTO(b.getIdRegistro(), b.getDiaRegistro(), b.getHoraRegistro(), b.getBibliotecario().getIdBibliotecario()))
+                .map(b -> new RegistroResponseDTO(b.getIdRegistro(), b.getDiaRegistro(), b.getHoraRegistro(),
+                        b.getBibliotecario().getIdBibliotecario()))
                 .collect(Collectors.toList());
     }
 
     public RegistroResponseDTO guardar(RegistroRequestDTO dto) {
         Bibliotecario bibliotecario = bibliotecarioRepository.findById(dto.getBibliotecarioId())
-                        .orElseThrow(() -> new RuntimeException("Bibliotecario no encontrado"));
-                        
+                .orElseThrow(() -> new RuntimeException(BIBLIOTECARIO_NO_ENCONTRADO));
+
         Registro nuevo = new Registro();
         nuevo.setDiaRegistro(dto.getDiaRegistro());
         nuevo.setHoraRegistro(dto.getHoraRegistro());
         nuevo.setBibliotecario(bibliotecario);
         Registro guardado = repo.save(nuevo);
-        return new RegistroResponseDTO(guardado.getIdRegistro(), guardado.getDiaRegistro(), guardado.getHoraRegistro(), guardado.getBibliotecario().getIdBibliotecario());
+        return new RegistroResponseDTO(guardado.getIdRegistro(), guardado.getDiaRegistro(), guardado.getHoraRegistro(),
+                guardado.getBibliotecario().getIdBibliotecario());
     }
 
     public Optional<RegistroResponseDTO> obtenerPorId(Long id) {
@@ -48,7 +51,10 @@ public class RegistroService {
                         b.getIdRegistro(),
                         b.getDiaRegistro(),
                         b.getHoraRegistro(),
-                        b.getBibliotecario() != null ? b.getBibliotecario().getIdBibliotecario() : 0 // En caso de que el genero sea null, se devuelve 0.
+                        b.getBibliotecario() != null ? b.getBibliotecario().getIdBibliotecario() : 0 // En caso de que
+                                                                                                     // el genero sea
+                                                                                                     // null, se
+                                                                                                     // devuelve 0.
                 ));
     }
 
@@ -65,19 +71,19 @@ public class RegistroService {
                 .map(b -> {
                     Bibliotecario bibliotecario = bibliotecarioRepository.findById(dto.getBibliotecarioId())
                             .orElseThrow(() -> new RuntimeException("Bibliotecario no encontrado"));
-    
+
                     b.setDiaRegistro(dto.getDiaRegistro());
                     b.setHoraRegistro(dto.getHoraRegistro());
                     b.setBibliotecario(bibliotecario);
-    
+
                     Registro actualizado = repo.save(b);
-    
+
                     return new RegistroResponseDTO(
                             actualizado.getIdRegistro(),
                             actualizado.getDiaRegistro(),
                             actualizado.getHoraRegistro(),
-                            actualizado.getBibliotecario() != null ? actualizado.getBibliotecario().getIdBibliotecario() : 0  
-                    );
+                            actualizado.getBibliotecario() != null ? actualizado.getBibliotecario().getIdBibliotecario()
+                                    : 0);
                 });
     }
 }

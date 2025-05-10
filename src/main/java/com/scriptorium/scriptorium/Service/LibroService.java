@@ -13,6 +13,8 @@ import com.scriptorium.scriptorium.infrastructure.repositories.LibroRepository;
 import com.scriptorium.scriptorium.dto.LibroRequestDTO;
 import com.scriptorium.scriptorium.dto.LibroResponseDTO;
 
+import static com.scriptorium.scriptorium.Service.HelperError.GENERO_NO_ENCONTRADO;
+
 @Service
 public class LibroService {
 
@@ -26,14 +28,15 @@ public class LibroService {
 
     public List<LibroResponseDTO> listar() {
         return repo.findAll().stream()
-                .map(b -> new LibroResponseDTO(b.getIdLibro(), b.getTitulo(), b.getAutor(), b.getIsbn(), b.getPrecio(), b.getGenero().getIdGenero()))
+                .map(b -> new LibroResponseDTO(b.getIdLibro(), b.getTitulo(), b.getAutor(), b.getIsbn(), b.getPrecio(),
+                        b.getGenero().getIdGenero()))
                 .collect(Collectors.toList());
     }
 
     public LibroResponseDTO guardar(LibroRequestDTO dto) {
         Genero genero = generoRepository.findById(dto.getGeneroId())
-                        .orElseThrow(() -> new RuntimeException("Género no encontrado"));
-                        
+                .orElseThrow(() -> new RuntimeException(GENERO_NO_ENCONTRADO));
+
         Libro nuevo = new Libro();
         nuevo.setTitulo(dto.getTitulo());
         nuevo.setAutor(dto.getAutor());
@@ -41,7 +44,8 @@ public class LibroService {
         nuevo.setGenero(genero);
         nuevo.setPrecio(dto.getPrecio());
         Libro guardado = repo.save(nuevo);
-        return new LibroResponseDTO(guardado.getIdLibro(), guardado.getTitulo(), guardado.getAutor(), guardado.getIsbn(), guardado.getPrecio(), guardado.getGenero().getIdGenero());
+        return new LibroResponseDTO(guardado.getIdLibro(), guardado.getTitulo(), guardado.getAutor(),
+                guardado.getIsbn(), guardado.getPrecio(), guardado.getGenero().getIdGenero());
     }
 
     public Optional<LibroResponseDTO> obtenerPorId(Long id) {
@@ -52,7 +56,8 @@ public class LibroService {
                         b.getAutor(),
                         b.getIsbn(),
                         b.getPrecio(),
-                        b.getGenero() != null ? b.getGenero().getIdGenero() : 0 // En caso de que el genero sea null, se devuelve 0.
+                        b.getGenero() != null ? b.getGenero().getIdGenero() : 0 // En caso de que el genero sea null, se
+                                                                                // devuelve 0.
                 ));
     }
 
@@ -68,24 +73,23 @@ public class LibroService {
         return repo.findById(id)
                 .map(b -> {
                     Genero genero = generoRepository.findById(dto.getGeneroId())
-                            .orElseThrow(() -> new RuntimeException("Género no encontrado"));
-    
+                            .orElseThrow(() -> new RuntimeException(GENERO_NO_ENCONTRADO));
+
                     b.setTitulo(dto.getTitulo());
                     b.setAutor(dto.getAutor());
                     b.setIsbn(dto.getIsbn());
-                    b.setGenero(genero);  
+                    b.setGenero(genero);
                     b.setPrecio(dto.getPrecio());
-    
+
                     Libro actualizado = repo.save(b);
-    
+
                     return new LibroResponseDTO(
                             actualizado.getIdLibro(),
                             actualizado.getTitulo(),
                             actualizado.getAutor(),
                             actualizado.getIsbn(),
                             actualizado.getPrecio(),
-                            actualizado.getGenero() != null ? actualizado.getGenero().getIdGenero() : 0  
-                    );
+                            actualizado.getGenero() != null ? actualizado.getGenero().getIdGenero() : 0);
                 });
     }
 }

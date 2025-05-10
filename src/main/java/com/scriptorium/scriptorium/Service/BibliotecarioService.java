@@ -1,23 +1,19 @@
 package com.scriptorium.scriptorium.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.sql.Types;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import javax.sql.DataSource;
 
 import com.scriptorium.scriptorium.domain.Bibliotecario;
 import com.scriptorium.scriptorium.infrastructure.repositories.BibliotecarioRepository;
 import com.scriptorium.scriptorium.dto.BibliotecarioRequestDTO;
 import com.scriptorium.scriptorium.dto.BibliotecarioResponseDTO;
+import static com.scriptorium.scriptorium.Service.HelperError.*;
 
 @Service
 public class BibliotecarioService {
@@ -39,7 +35,7 @@ public class BibliotecarioService {
     public BibliotecarioResponseDTO guardar(BibliotecarioRequestDTO dto) {
 
         if (verificarNombre(dto.getUsuario())) {
-            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+            throw new IllegalArgumentException(USUARIO_NOMBRE_EN_USO);
         }
 
         Bibliotecario nuevo = new Bibliotecario();
