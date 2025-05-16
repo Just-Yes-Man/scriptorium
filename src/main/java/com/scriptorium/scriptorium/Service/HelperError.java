@@ -10,4 +10,5 @@ public class HelperError {
     public static final String LIBRO_NO_ENCONTRADO = "El libro introducido no existe";
     public static final String INVENTARIO_NO_ENCONTRADO = "El inventario introducido no existe";
     public static final String YA_DEVUELTO = "El libro introducido ya fue devuelto";
+    public static final String SIN_EJEMPLARES = "No quedan mas ejemplares del libro";
 }

@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -13,7 +15,7 @@ import com.scriptorium.scriptorium.domain.Bibliotecario;
 import com.scriptorium.scriptorium.infrastructure.repositories.BibliotecarioRepository;
 import com.scriptorium.scriptorium.dto.BibliotecarioRequestDTO;
 import com.scriptorium.scriptorium.dto.BibliotecarioResponseDTO;
-import static com.scriptorium.scriptorium.Service.HelperError.*;
+import static com.scriptorium.scriptorium.Service.HelperError.USUARIO_NOMBRE_EN_USO;
 
 @Service
 public class BibliotecarioService {
@@ -26,10 +28,9 @@ public class BibliotecarioService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<BibliotecarioResponseDTO> listar() {
-        return repo.findAll().stream()
-                .map(b -> new BibliotecarioResponseDTO(b.getIdBibliotecario(), b.getUsuario()))
-                .collect(Collectors.toList());
+    public Page<BibliotecarioResponseDTO> listar(Pageable pageable) {
+        return repo.findAll(pageable)
+                .map(b -> new BibliotecarioResponseDTO(b.getIdBibliotecario(), b.getUsuario()));
     }
 
     public BibliotecarioResponseDTO guardar(BibliotecarioRequestDTO dto) {
