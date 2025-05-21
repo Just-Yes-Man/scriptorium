@@ -62,7 +62,8 @@ for (PrestamoResponseDTO prestamo : prestamoList) {
         multaDTO.setMonto(dias*coeficienteMulta);
         multaDTO.setFechaMulta(fechaActual);
         
-        multaService.guardar(multaDTO);
+        multaService.guardar(multaDTO); 
+        
     }
     
 }
