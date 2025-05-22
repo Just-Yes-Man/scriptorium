@@ -17,7 +17,7 @@ import com.scriptorium.scriptorium.dto.LibroRequestDTO;
 import com.scriptorium.scriptorium.dto.LibroResponseDTO;
 
 @RestController
-@RequestMapping("/Libro")
+@RequestMapping("/libro")
 public class LibroControl {
 
     private final LibroService service;

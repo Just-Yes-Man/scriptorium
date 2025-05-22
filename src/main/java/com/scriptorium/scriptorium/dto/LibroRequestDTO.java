@@ -1,13 +1,13 @@
 package com.scriptorium.scriptorium.dto;
 
-
 public class LibroRequestDTO {
 
     private String titulo;
     private String autor;
     private String isbn;
     private double precio;
-    private long generoId; 
+    private long generoId;
+    private int stock;
 
     // Getters y Setters
     public String getTitulo() {
@@ -48,5 +48,13 @@ public class LibroRequestDTO {
 
     public void setGeneroId(long generoId) {
         this.generoId = generoId;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int strock) {
+        this.stock = strock;
     }
 }

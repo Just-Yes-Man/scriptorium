@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import static com.scriptorium.scriptorium.Service.HelperError.GENERO_NO_ENCONTRADO;
+import static com.scriptorium.scriptorium.Service.HelperError.LIBRO_NO_ENCONTRADO;
+
 import com.scriptorium.scriptorium.domain.Inventario;
 import com.scriptorium.scriptorium.domain.Libro;
 import com.scriptorium.scriptorium.infrastructure.repositories.InventarioRepository;
@@ -32,7 +34,7 @@ public class InventarioService {
 
     public InventarioResponseDTO guardar(InventarioRequestDTO dto) {
         Libro libro = libroRepository.findById(dto.getLibroId())
-                .orElseThrow(() -> new RuntimeException(GENERO_NO_ENCONTRADO));
+                .orElseThrow(() -> new RuntimeException(LIBRO_NO_ENCONTRADO));
 
         Inventario nuevo = new Inventario();
         nuevo.setStock(dto.getStock());

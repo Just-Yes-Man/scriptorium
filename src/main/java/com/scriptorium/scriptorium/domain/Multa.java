@@ -21,7 +21,7 @@ public class Multa {
     @ManyToOne
     @JoinColumn(name = "prestamo_id", nullable = false)
     private Prestamo prestamo;
-    
+
     @ManyToOne
     @JoinColumn(name = "tipoMulta_id", nullable = false)
     private TipoMulta tipoMulta;
@@ -66,5 +66,4 @@ public class Multa {
         this.tipoMulta = tipoMulta;
     }
 
-    
 }

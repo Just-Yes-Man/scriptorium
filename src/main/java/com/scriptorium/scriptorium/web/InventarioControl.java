@@ -17,7 +17,7 @@ import com.scriptorium.scriptorium.dto.InventarioRequestDTO;
 import com.scriptorium.scriptorium.dto.InventarioResponseDTO;
 
 @RestController
-@RequestMapping("/Inventario")
+@RequestMapping("/inventario")
 public class InventarioControl {
 
     private final InventarioService service;

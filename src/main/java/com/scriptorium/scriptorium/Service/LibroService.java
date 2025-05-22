@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.scriptorium.scriptorium.domain.Genero;
+import com.scriptorium.scriptorium.domain.Inventario;
 import com.scriptorium.scriptorium.domain.Libro;
 import com.scriptorium.scriptorium.infrastructure.repositories.GeneroRepository;
+import com.scriptorium.scriptorium.infrastructure.repositories.InventarioRepository;
 import com.scriptorium.scriptorium.infrastructure.repositories.LibroRepository;
 import com.scriptorium.scriptorium.dto.LibroRequestDTO;
 import com.scriptorium.scriptorium.dto.LibroResponseDTO;
@@ -20,10 +22,13 @@ public class LibroService {
 
     private final LibroRepository repo;
     private final GeneroRepository generoRepository;
+    private final InventarioRepository inventarioRepository;
 
-    public LibroService(LibroRepository repo, GeneroRepository generoRepository) {
+    public LibroService(LibroRepository repo, GeneroRepository generoRepository,
+            InventarioRepository inventarioRepository) {
         this.repo = repo;
         this.generoRepository = generoRepository;
+        this.inventarioRepository = inventarioRepository;
     }
 
     public List<LibroResponseDTO> listar() {
@@ -44,6 +49,12 @@ public class LibroService {
         nuevo.setGenero(genero);
         nuevo.setPrecio(dto.getPrecio());
         Libro guardado = repo.save(nuevo);
+
+        Inventario inventario = new Inventario();
+        inventario.setLibro(guardado);
+        inventario.setStock(dto.getStock());
+        inventarioRepository.save(inventario);
+
         return new LibroResponseDTO(guardado.getIdLibro(), guardado.getTitulo(), guardado.getAutor(),
                 guardado.getIsbn(), guardado.getPrecio(), guardado.getGenero().getIdGenero());
     }

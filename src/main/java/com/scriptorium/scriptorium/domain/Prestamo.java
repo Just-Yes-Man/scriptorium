@@ -2,6 +2,8 @@ package com.scriptorium.scriptorium.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Prestamo {
@@ -9,6 +11,9 @@ public class Prestamo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPrestamo;
+
+    @OneToMany(mappedBy = "prestamo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Multa> multas = new ArrayList<>();
 
     @Column(length = 50)
     private String ficha;
