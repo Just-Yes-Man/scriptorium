@@ -67,6 +67,47 @@ public class AutomaticaMultaService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+    /*
+     * @Scheduled(cron = "0 0 0 * * *")
+     * public void creadorMultas(){
+     * 
+     * List<PrestamoResponseDTO> prestamoList= prestamoService.listar();
+     * List<MultaResponseDTO> multaList = multaService.listar();
+     * fechaActual= LocalDate.now();
+     * MultaRequestDTO multaDTO= new MultaRequestDTO();
+     * 
+     * 
+     * Set<Long> prestamosConMulta = multaList.stream()
+     * .map(MultaResponseDTO::getPrestamoId)
+     * .collect(Collectors.toSet());
+     * 
+     * 
+     * 
+     * for (PrestamoResponseDTO prestamo : prestamoList) {
+     * 
+     * 
+     * if (prestamosConMulta.contains(prestamo.getIdPrestamo())) {
+     * continue;
+     * }
+     * 
+     * if (prestamo.getFechaFin().isAfter(fechaActual)) {
+     * long dias=ChronoUnit.DAYS.between(prestamo.getFechaFin(), fechaActual);
+     * 
+     * multaDTO.setTipoMultaId(1);
+     * multaDTO.setPrestamoId(prestamo.getIdPrestamo());
+     * multaDTO.setMonto(dias*coeficienteMulta);
+     * multaDTO.setFechaMulta(fechaActual);
+     * 
+     * multaService.guardar(multaDTO);
+     * 
+     * }
+     * 
+     * }
+     * }
+     */
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+
         // creadorMultas();
         List<PrestamoResponseDTO> prestamoList = prestamoService.listar();
         List<MultaResponseDTO> multaList = multaService.listar();
