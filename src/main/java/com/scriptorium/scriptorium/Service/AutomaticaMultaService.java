@@ -64,8 +64,6 @@ public class AutomaticaMultaService implements ApplicationRunner {
      * }
      * }
      */
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
 
     /*
      * @Scheduled(cron = "0 0 0 * * *")
