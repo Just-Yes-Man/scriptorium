@@ -32,70 +32,66 @@ public class PrestamoControl {
         this.service = service;
     }
 
-    @GetMapping
-    public List<PrestamoResponseDTO> listar() {
-        return service.listar();
+     @GetMapping
+    public ResponseEntity<ApiResponse<List<PrestamoResponseDTO>>> listar() {
+        List<PrestamoResponseDTO> lista = service.listar();
+        return ResponseEntity.ok(
+                new ApiResponse<>(200, "Lista de préstamos obtenida", lista)
+        );
     }
 
-     
-
-
-     @PostMapping
+    @PostMapping
     public ResponseEntity<ApiResponse<PrestamoResponseDTO>> guardar(@Valid @RequestBody PrestamoRequestDTO dto) {
-
-         PrestamoResponseDTO a= service.guardar(dto);
-           return new ResponseEntity<>(
-                new ApiResponse<>(HttpStatus.CREATED.value(), "Usuario creado exitosamente", a),
+        PrestamoResponseDTO a = service.guardar(dto);
+        return new ResponseEntity<>(
+                new ApiResponse<>(HttpStatus.CREATED.value(), "Préstamo creado exitosamente", a),
                 HttpStatus.CREATED
         );
     }
-        
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<PrestamoResponseDTO>> obtenerPorId(@PathVariable Long id) {
-    return service.obtenerPorId(id)
-            .map(prestamo -> ResponseEntity.ok(
-                    new ApiResponse<>(200, "Préstamo encontrado", prestamo)
-            ))
-            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(404, "Préstamo no encontrado", null)
-            ));
-}
+        return service.obtenerPorId(id)
+                .map(prestamo -> ResponseEntity.ok(
+                        new ApiResponse<>(200, "Préstamo encontrado", prestamo)
+                ))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ApiResponse<>(404, "Préstamo no encontrado", null)
+                ));
+    }
 
-   /*  @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Long id) {
-            if (service.eliminar(id)) {
-            return ResponseEntity.ok(new ApiResponse<>(200, "Usuario Eliminado", null));
-        } else {
-        return ResponseEntity.ok(new ApiResponse<>(404, "No existe el usuario", null));
-        }  
-    }*/
-
-        @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         if (service.eliminar(id)) {
-            return ResponseEntity.noContent().build(); // 204
+            return ResponseEntity.ok(new ApiResponse<>(200, "Préstamo eliminado", null));
         } else {
-            return ResponseEntity.notFound().build(); // 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(404, "No existe el préstamo", null));
         }
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<PrestamoResponseDTO> actualizar(@PathVariable Long id,
-            @RequestBody PrestamoRequestDTO dto) {
+    public ResponseEntity<ApiResponse<PrestamoResponseDTO>> actualizar(@PathVariable Long id,
+                                                                       @Valid @RequestBody PrestamoRequestDTO dto) {
         return service.actualizar(id, dto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(actualizado -> ResponseEntity.ok(
+                        new ApiResponse<>(200, "Préstamo actualizado", actualizado)
+                ))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiResponse<>(404, "Préstamo no encontrado", null)));
     }
 
     @PutMapping("/devolver/{id}")
-    public ResponseEntity<PrestamoResponseDTO> devolverLibro(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<PrestamoResponseDTO>> devolverLibro(@PathVariable Long id) {
         try {
             PrestamoResponseDTO dto = service.devolverLibro(id);
-            return ResponseEntity.ok(dto);
+            return ResponseEntity.ok(
+                    new ApiResponse<>(200, "Libro devuelto correctamente", dto)
+            );
         } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse<>(400, "Error al devolver el libro: " + ex.getMessage(), null)
+            );
         }
     }
 

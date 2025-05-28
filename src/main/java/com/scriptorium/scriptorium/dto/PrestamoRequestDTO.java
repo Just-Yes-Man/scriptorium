@@ -4,17 +4,17 @@ import java.time.LocalDate;
 
 public class PrestamoRequestDTO {
 
-    private String ficha;
-    private Long usuarioId;
-    private Long libroId;
-    private Long bibliotecarioId;
-    private boolean activo;
-    private boolean multado;
-    private boolean devuelto;
-    private String estadoPrestamo;
-    private String estadoDevuelto;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
+        private String ficha;
+        private Long usuarioId;
+        private Long libroId;
+        private Long bibliotecarioId;
+        private boolean activo;
+        private boolean multado;
+        private boolean devuelto;
+        private String estadoPrestamo;
+        private String estadoDevuelto;
+        private LocalDate fechaInicio;
+        private LocalDate fechaFin;
 
     // Getters y Setters
 
