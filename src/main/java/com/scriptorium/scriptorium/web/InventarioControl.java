@@ -2,6 +2,7 @@ package com.scriptorium.scriptorium.web;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.scriptorium.scriptorium.Service.InventarioService;
 import com.scriptorium.scriptorium.dto.InventarioRequestDTO;
 import com.scriptorium.scriptorium.dto.InventarioResponseDTO;
+import com.scriptorium.scriptorium.utils.ApiResponse;
 
 @RestController
 @RequestMapping("/inventario")
@@ -27,36 +29,52 @@ public class InventarioControl {
     }
 
     @GetMapping
-    public List<InventarioResponseDTO> listar() {
-        return service.listar();
+    public ResponseEntity<ApiResponse<List<InventarioResponseDTO>>> listar() {
+        List<InventarioResponseDTO> lista = service.listar();
+        return ResponseEntity.ok(
+                new ApiResponse<>(200, "Lista de inventarios obtenida", lista)
+        );
     }
 
     @PostMapping
-    public InventarioResponseDTO guardar(@RequestBody InventarioRequestDTO dto) {
-        return service.guardar(dto);
+    public ResponseEntity<ApiResponse<InventarioResponseDTO>> guardar(@RequestBody InventarioRequestDTO dto) {
+        InventarioResponseDTO inventario = service.guardar(dto);
+        return new ResponseEntity<>(
+                new ApiResponse<>(HttpStatus.CREATED.value(), "Inventario creado exitosamente", inventario),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InventarioResponseDTO> obtenerPorId(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<InventarioResponseDTO>> obtenerPorId(@PathVariable Long id) {
         return service.obtenerPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(inventario -> ResponseEntity.ok(
+                        new ApiResponse<>(200, "Inventario encontrado", inventario)
+                ))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ApiResponse<>(404, "Inventario no encontrado", null)
+                ));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Long id) {
         if (service.eliminar(id)) {
-            return ResponseEntity.noContent().build(); // 204
+            return ResponseEntity.ok(new ApiResponse<>(200, "Inventario eliminado", null));
         } else {
-            return ResponseEntity.notFound().build(); // 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(404, "Inventario no encontrado", null));
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InventarioResponseDTO> actualizar(@PathVariable Long id,
-            @RequestBody InventarioRequestDTO dto) {
+    public ResponseEntity<ApiResponse<InventarioResponseDTO>> actualizar(@PathVariable Long id,
+                                                                         @RequestBody InventarioRequestDTO dto) {
         return service.actualizar(id, dto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(actualizado -> ResponseEntity.ok(
+                        new ApiResponse<>(200, "Inventario actualizado", actualizado)
+                ))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ApiResponse<>(404, "Inventario no encontrado", null)
+                ));
     }
 }
