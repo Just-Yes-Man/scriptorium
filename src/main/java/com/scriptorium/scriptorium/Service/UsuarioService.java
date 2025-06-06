@@ -22,7 +22,8 @@ public class UsuarioService {
 
     public List<UsuarioResponseDTO> listar() {
         return repo.findAll().stream()
-                .map(b -> new UsuarioResponseDTO(b.getIdUsuario(), b.getNombre(), b.getFechaNacimiento(), b.getDireccion(), b.getContacto(), b.getFotografia(), b.getClave()))
+                .map(b -> new UsuarioResponseDTO(b.getIdUsuario(), b.getNombre(), b.getFechaNacimiento(),
+                        b.getDireccion(), b.getContacto()))
                 .collect(Collectors.toList());
     }
 
@@ -32,15 +33,15 @@ public class UsuarioService {
         nuevo.setFechaNacimiento(dto.getFechaNacimiento());
         nuevo.setDireccion(dto.getDireccion());
         nuevo.setContacto(dto.getContacto());
-        nuevo.setFotografia(dto.getFotografia());
-        nuevo.setClave(dto.getClave());
         Usuario guardado = repo.save(nuevo);
-        return new UsuarioResponseDTO(guardado.getIdUsuario(), guardado.getNombre(), guardado.getFechaNacimiento(), guardado.getDireccion(), guardado.getContacto(), guardado.getFotografia(), guardado.getClave());
+        return new UsuarioResponseDTO(guardado.getIdUsuario(), guardado.getNombre(), guardado.getFechaNacimiento(),
+                guardado.getDireccion(), guardado.getContacto());
     }
 
     public Optional<UsuarioResponseDTO> obtenerPorId(Long id) {
         return repo.findById(id)
-                .map(b -> new UsuarioResponseDTO(b.getIdUsuario(), b.getNombre(), b.getFechaNacimiento(), b.getDireccion(), b.getContacto(), b.getFotografia(), b.getClave()));
+                .map(b -> new UsuarioResponseDTO(b.getIdUsuario(), b.getNombre(), b.getFechaNacimiento(),
+                        b.getDireccion(), b.getContacto()));
     }
 
     public boolean eliminar(Long id) {
@@ -55,13 +56,13 @@ public class UsuarioService {
         return repo.findById(id)
                 .map(b -> {
                     b.setNombre(dto.getNombre());
-                    b.setClave(dto.getClave());
+
                     b.setDireccion(dto.getDireccion());
                     b.setContacto(dto.getContacto());
-                    b.setFotografia(dto.getFotografia());
-                    b.setClave(dto.getClave());
+
                     Usuario actualizado = repo.save(b);
-                    return new UsuarioResponseDTO(actualizado.getIdUsuario(), actualizado.getNombre(), actualizado.getFechaNacimiento(), actualizado.getDireccion(), actualizado.getContacto(), actualizado.getFotografia(), actualizado.getClave());
+                    return new UsuarioResponseDTO(actualizado.getIdUsuario(), actualizado.getNombre(),
+                            actualizado.getFechaNacimiento(), actualizado.getDireccion(), actualizado.getContacto());
                 });
     }
 }

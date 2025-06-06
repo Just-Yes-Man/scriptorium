@@ -8,20 +8,17 @@ public class UsuarioResponseDTO {
     private LocalDate fechaNacimiento;
     private String direccion;
     private String contacto;
-    private String fotografia;
-    private String clave;
-    
-    public UsuarioResponseDTO() {}
 
-    public UsuarioResponseDTO(long id, String nombre, LocalDate fechaNacimiento, String direccion, String contacto, String fotografia,
-            String clave) {
+    public UsuarioResponseDTO() {
+    }
+
+    public UsuarioResponseDTO(long id, String nombre, LocalDate fechaNacimiento, String direccion, String contacto) {
         this.id = id;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
         this.direccion = direccion;
         this.contacto = contacto;
-        this.fotografia = fotografia;
-        this.clave = clave;
+
     }
 
     public long getId() {
@@ -35,7 +32,6 @@ public class UsuarioResponseDTO {
     public String getNombre() {
         return nombre;
     }
-    
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -57,22 +53,6 @@ public class UsuarioResponseDTO {
         this.contacto = contacto;
     }
 
-    public String getFotografia() {
-        return fotografia;
-    }
-
-    public void setFotografia(String fotografia) {
-        this.fotografia = fotografia;
-    }
-
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
-
     public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
@@ -81,7 +61,4 @@ public class UsuarioResponseDTO {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    
-
-    
 }

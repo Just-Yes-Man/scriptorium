@@ -39,8 +39,6 @@ public class Prestamo {
     @JoinColumn(name = "bibliotecario_id", nullable = false)
     private Bibliotecario bibliotecario;
 
-    // Getters y Setters
-
     public Long getIdPrestamo() {
         return idPrestamo;
     }

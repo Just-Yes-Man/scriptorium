@@ -1,14 +1,18 @@
 package com.scriptorium.scriptorium.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Usuario {
@@ -20,15 +24,13 @@ public class Usuario {
     private String nombre;
     @Column(length = 150)
     private String direccion;
-
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
     @Column(length = 20)
     private String contacto;
-    @Column(length = 255)
-    private String fotografia;
-    @Column(length = 100, nullable = false)
-    private String clave;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Prestamo> prestamos = new ArrayList<>();
 
     public long getIdUsuario() {
         return idUsuario;
@@ -68,22 +70,6 @@ public class Usuario {
 
     public void setContacto(String contacto) {
         this.contacto = contacto;
-    }
-
-    public String getFotografia() {
-        return fotografia;
-    }
-
-    public void setFotografia(String fotografia) {
-        this.fotografia = fotografia;
-    }
-
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
     }
 
     ;
