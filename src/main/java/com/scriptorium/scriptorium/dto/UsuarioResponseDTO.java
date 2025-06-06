@@ -9,9 +9,6 @@ public class UsuarioResponseDTO {
     private String direccion;
     private String contacto;
 
-    public UsuarioResponseDTO() {
-    }
-
     public UsuarioResponseDTO(long id, String nombre, LocalDate fechaNacimiento, String direccion, String contacto) {
         this.id = id;
         this.nombre = nombre;

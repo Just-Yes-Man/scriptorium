@@ -1,5 +1,6 @@
 package com.scriptorium.scriptorium.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +26,17 @@ public class UsuarioService {
                 .map(b -> new UsuarioResponseDTO(b.getIdUsuario(), b.getNombre(), b.getFechaNacimiento(),
                         b.getDireccion(), b.getContacto()))
                 .collect(Collectors.toList());
+    }
+
+    public List<UsuarioResponseDTO> buscarUsuarios(String palabra) {
+        List<Object[]> resultados = repo.buscarUsuarios(palabra);
+
+        return resultados.stream().map(obj -> new UsuarioResponseDTO(
+                ((Number) obj[0]).longValue(),
+                (String) obj[1],
+                ((java.sql.Date) obj[2]).toLocalDate(), // pasar a localdate
+                (String) obj[3],
+                (String) obj[4])).collect(Collectors.toList());
     }
 
     public UsuarioResponseDTO guardar(UsuarioRequestDTO dto) {

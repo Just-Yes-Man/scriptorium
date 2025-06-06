@@ -39,6 +39,23 @@ public class PrestamoService {
                 this.inventarioRepo = inventarioRepo;
         }
 
+        public List<PrestamoResponseDTO> buscarPrestamos(String palabra) {
+                List<Object[]> resultados = prestamoRepo.buscarPrestamosRaw(palabra);
+                return resultados.stream().map(row -> new PrestamoResponseDTO(
+                                ((Number) row[0]).longValue(),
+                                (String) row[1],
+                                ((Number) row[2]).longValue(),
+                                ((Number) row[3]).longValue(),
+                                ((Number) row[4]).longValue(),
+                                (Boolean) row[5],
+                                (Boolean) row[6],
+                                (Boolean) row[7],
+                                (String) row[8],
+                                (String) row[9],
+                                ((java.sql.Date) row[10]).toLocalDate(),
+                                ((java.sql.Date) row[11]).toLocalDate())).collect(Collectors.toList());
+        }
+
         public List<PrestamoResponseDTO> listar() {
                 return prestamoRepo.findAll().stream()
                                 .map(p -> new PrestamoResponseDTO(
