@@ -41,8 +41,7 @@ public class BibliotecaControl {
         Pageable pageable = PageRequest.of(page, size);
         Page<BibliotecarioResponseDTO> lista = service.listar(pageable);
         return ResponseEntity.ok(
-                new ApiResponse<>(200, "Lista de bibliotecarios obtenida", lista)
-        );
+                new ApiResponse<>(200, "Lista de bibliotecarios obtenida", lista));
     }
 
     @PostMapping
@@ -50,19 +49,16 @@ public class BibliotecaControl {
         BibliotecarioResponseDTO creado = service.guardar(dto);
         return new ResponseEntity<>(
                 new ApiResponse<>(HttpStatus.CREATED.value(), "Bibliotecario creado exitosamente", creado),
-                HttpStatus.CREATED
-        );
+                HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<BibliotecarioResponseDTO>> obtenerPorId(@PathVariable Long id) {
         Optional<BibliotecarioResponseDTO> opt = service.obtenerPorId(id);
         return opt.map(bib -> ResponseEntity.ok(
-                    new ApiResponse<>(200, "Bibliotecario encontrado", bib)
-                ))
+                new ApiResponse<>(200, "Bibliotecario encontrado", bib)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(404, "Bibliotecario no encontrado", null)
-                ));
+                        new ApiResponse<>(404, "Bibliotecario no encontrado", null)));
     }
 
     @DeleteMapping("/{id}")
@@ -77,14 +73,12 @@ public class BibliotecaControl {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<BibliotecarioResponseDTO>> actualizar(@PathVariable Long id,
-                                                                            @RequestBody BibliotecarioRequestDTO dto) {
+            @RequestBody BibliotecarioRequestDTO dto) {
         return service.actualizar(id, dto)
                 .map(actualizado -> ResponseEntity.ok(
-                        new ApiResponse<>(200, "Bibliotecario actualizado", actualizado)
-                ))
+                        new ApiResponse<>(200, "Bibliotecario actualizado", actualizado)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ApiResponse<>(404, "Bibliotecario no encontrado", null)
-                ));
+                        new ApiResponse<>(404, "Bibliotecario no encontrado", null)));
     }
 
     @GetMapping("/verificar-nombre")
@@ -92,16 +86,16 @@ public class BibliotecaControl {
         boolean existe = service.verificarNombre(nombre);
         if (existe) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                    new ApiResponse<>(409, "El nombre de usuario ya está en uso", Map.of("mensaje", "El nombre de usuario ya está en uso"))
-            );
+                    new ApiResponse<>(409, "El nombre de usuario ya está en uso",
+                            Map.of("mensaje", "El nombre de usuario ya está en uso")));
         } else {
             return ResponseEntity.ok(
-                    new ApiResponse<>(200, "El nombre de usuario está disponible", Map.of("mensaje", "El nombre de usuario está disponible"))
-            );
+                    new ApiResponse<>(200, "El nombre de usuario está disponible",
+                            Map.of("mensaje", "El nombre de usuario está disponible")));
         }
     }
 
-      @PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credenciales) {
         String usuario = credenciales.get("usuario");
         String contraseña = credenciales.get("contraseña");

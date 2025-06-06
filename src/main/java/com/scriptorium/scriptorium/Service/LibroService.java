@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.scriptorium.scriptorium.domain.Genero;
 import com.scriptorium.scriptorium.domain.Inventario;
@@ -36,6 +37,10 @@ public class LibroService {
                 .map(b -> new LibroResponseDTO(b.getIdLibro(), b.getTitulo(), b.getAutor(), b.getIsbn(), b.getPrecio(),
                         b.getGenero().getIdGenero()))
                 .collect(Collectors.toList());
+    }
+
+    public List<LibroResponseDTO> buscar(String palabra) {
+        return repo.buscarLibros(palabra);
     }
 
     public LibroResponseDTO guardar(LibroRequestDTO dto) {
