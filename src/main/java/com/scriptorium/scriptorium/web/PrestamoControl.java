@@ -90,9 +90,10 @@ public class PrestamoControl {
     }
 
     @PutMapping("/devolver/{id}")
-    public ResponseEntity<ApiResponse<PrestamoResponseDTO>> devolverLibro(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<PrestamoResponseDTO>> devolverLibro(@PathVariable Long id,
+            @RequestParam String estadoDevuelto) {
         try {
-            PrestamoResponseDTO dto = service.devolverLibro(id);
+            PrestamoResponseDTO dto = service.devolverLibro(id, estadoDevuelto);
             return ResponseEntity.ok(
                     new ApiResponse<>(200, "Libro devuelto correctamente", dto));
         } catch (RuntimeException ex) {
@@ -101,4 +102,15 @@ public class PrestamoControl {
         }
     }
 
+    @PutMapping("/pagar-multa/{id}")
+    public ResponseEntity<ApiResponse<PrestamoResponseDTO>> pagarMulta(@PathVariable Long id) {
+        try {
+            PrestamoResponseDTO dto = service.pagarMulta(id);
+            return ResponseEntity.ok(
+                    new ApiResponse<>(200, "Multa pagada correctamente", dto));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse<>(400, "Error al pagar multa: " + ex.getMessage(), null));
+        }
+    }
 }

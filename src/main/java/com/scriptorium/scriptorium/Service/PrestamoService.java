@@ -1,9 +1,11 @@
 package com.scriptorium.scriptorium.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.scriptorium.scriptorium.domain.Prestamo;
@@ -16,6 +18,7 @@ import com.scriptorium.scriptorium.infrastructure.repositories.UsuarioRepository
 import com.scriptorium.scriptorium.infrastructure.repositories.LibroRepository;
 import com.scriptorium.scriptorium.infrastructure.repositories.BibliotecarioRepository;
 import com.scriptorium.scriptorium.infrastructure.repositories.InventarioRepository;
+import com.scriptorium.scriptorium.dto.MultaRequestDTO;
 import com.scriptorium.scriptorium.dto.PrestamoRequestDTO;
 import com.scriptorium.scriptorium.dto.PrestamoResponseDTO;
 import static com.scriptorium.scriptorium.Service.HelperError.*;
@@ -23,6 +26,8 @@ import static com.scriptorium.scriptorium.Service.HelperError.*;
 @Service
 public class PrestamoService {
 
+        @Autowired
+        private MultaService multaService;
         private final PrestamoRepository prestamoRepo;
         private final UsuarioRepository usuarioRepo;
         private final LibroRepository libroRepo;
@@ -101,9 +106,9 @@ public class PrestamoService {
                 nuevo.setActivo(dto.isActivo());
                 nuevo.setMultado(dto.isMultado());
                 nuevo.setEstadoPrestamo(dto.getEstadoPrestamo());
-                nuevo.setEstadoDevuelto(dto.getEstadoDevuelto());
+                nuevo.setEstadoDevuelto("");
                 nuevo.setFechaInicio(dto.getFechaInicio());
-                nuevo.setFechaFin(dto.getFechaFin());
+                nuevo.setFechaFin(dto.getFechaInicio().plusDays(15));
                 nuevo.setDevuelto(false);
 
                 Prestamo guardado = prestamoRepo.save(nuevo);
@@ -171,9 +176,8 @@ public class PrestamoService {
                                         p.setMultado(dto.isMultado());
                                         p.setDevuelto(dto.isDevuelto());
                                         p.setEstadoPrestamo(dto.getEstadoPrestamo());
-                                        p.setEstadoDevuelto(dto.getEstadoDevuelto());
+
                                         p.setFechaInicio(dto.getFechaInicio());
-                                        p.setFechaFin(dto.getFechaFin());
 
                                         Prestamo actualizado = prestamoRepo.save(p);
 
@@ -200,7 +204,22 @@ public class PrestamoService {
                                 });
         }
 
-        public PrestamoResponseDTO devolverLibro(Long prestamoId) {
+        public void generarMultaPorEstadoDevuelto(Prestamo prestamo) {
+                Libro libro = prestamo.getLibro();
+                if (libro == null || libro.getPrecio() == 0) {
+                        throw new RuntimeException("No se puede generar multa: libro o precio no disponible.");
+                }
+
+                MultaRequestDTO multaDTO = new MultaRequestDTO();
+                multaDTO.setTipoMultaId(2); // Tipo 2: Multa por estado devuelto
+                multaDTO.setPrestamoId(prestamo.getIdPrestamo());
+                multaDTO.setMonto((float) libro.getPrecio());
+                multaDTO.setFechaMulta(LocalDate.now());
+
+                multaService.guardar(multaDTO);
+        }
+
+        public PrestamoResponseDTO devolverLibro(Long prestamoId, String estadoD) {
                 Prestamo prestamo = prestamoRepo.findById(prestamoId)
                                 .orElseThrow(() -> new RuntimeException(PRESTAMO_NO_ENCONTRADO));
 
@@ -215,7 +234,54 @@ public class PrestamoService {
                 inventario.setStock(inventario.getStock() + 1);
                 inventarioRepo.save(inventario);
 
-                prestamo.setDevuelto(true);
+                prestamo.setEstadoDevuelto(estadoD);
+
+                String estadoPrestado = prestamo.getEstadoPrestamo();
+                String estadoDevuelto = prestamo.getEstadoDevuelto();
+
+                int nivelPrestado = EstadoLibroMap.obtenerNivelEstado(estadoPrestado);
+                int nivelDevuelto = EstadoLibroMap.obtenerNivelEstado(estadoDevuelto);
+
+                if (nivelDevuelto > nivelPrestado) {
+                        prestamo.setMultado(true);
+                        generarMultaPorEstadoDevuelto(prestamo);
+                } else {
+                        prestamo.setDevuelto(true);
+                        prestamo.setActivo(false);
+                }
+
+                Prestamo actualizado = prestamoRepo.save(prestamo);
+
+                return new PrestamoResponseDTO(
+                                actualizado.getIdPrestamo(),
+                                actualizado.getFicha(),
+                                actualizado.getUsuario() != null ? actualizado.getUsuario().getIdUsuario() : 0,
+                                actualizado.getLibro() != null ? actualizado.getLibro().getIdLibro() : 0,
+                                actualizado.getBibliotecario() != null
+                                                ? actualizado.getBibliotecario().getIdBibliotecario()
+                                                : 0,
+                                actualizado.isActivo(),
+                                actualizado.isMultado(),
+                                actualizado.isDevuelto(),
+                                actualizado.getEstadoPrestamo(),
+                                actualizado.getEstadoDevuelto(),
+                                actualizado.getFechaInicio(),
+                                actualizado.getFechaFin());
+        }
+
+        public PrestamoResponseDTO pagarMulta(Long prestamoId) {
+                Prestamo prestamo = prestamoRepo.findById(prestamoId)
+                                .orElseThrow(() -> new RuntimeException("Préstamo no encontrado"));
+
+                if (!prestamo.isMultado()) {
+                        throw new RuntimeException("Este préstamo no tiene multa pendiente");
+                }
+
+                // Marcar como pagado
+                prestamo.setActivo(false);
+                prestamo.setMultado(false);
+                prestamo.setDevuelto(true); // por si aún no estaba marcado como devuelto
+
                 Prestamo actualizado = prestamoRepo.save(prestamo);
 
                 return new PrestamoResponseDTO(

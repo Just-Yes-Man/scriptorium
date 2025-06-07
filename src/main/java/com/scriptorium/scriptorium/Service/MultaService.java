@@ -1,11 +1,13 @@
 package com.scriptorium.scriptorium.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.scriptorium.scriptorium.domain.Libro;
 import com.scriptorium.scriptorium.domain.Multa;
 import com.scriptorium.scriptorium.domain.Prestamo;
 import com.scriptorium.scriptorium.domain.TipoMulta;
