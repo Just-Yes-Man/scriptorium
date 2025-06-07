@@ -5,9 +5,9 @@ import java.time.LocalDate;
 public class PrestamoRequestDTO {
 
     private String ficha;
-    private Long usuarioId;
+    private String usuario;
     private Long libroId;
-    private Long bibliotecarioId;
+    private String bibliotecario;
     private boolean activo;
     private boolean multado;
     private boolean devuelto;
@@ -25,12 +25,12 @@ public class PrestamoRequestDTO {
         this.ficha = ficha;
     }
 
-    public Long getUsuarioId() {
-        return usuarioId;
+    public String getUsuarioId() {
+        return usuario;
     }
 
-    public void setUsuarioId(Long usuarioId) {
-        this.usuarioId = usuarioId;
+    public void setUsuarioId(String usuarioId) {
+        this.usuario = usuarioId;
     }
 
     public Long getLibroId() {
@@ -41,12 +41,12 @@ public class PrestamoRequestDTO {
         this.libroId = libroId;
     }
 
-    public Long getBibliotecarioId() {
-        return bibliotecarioId;
+    public String getBibliotecarioId() {
+        return bibliotecario;
     }
 
-    public void setBibliotecarioId(Long bibliotecarioId) {
-        this.bibliotecarioId = bibliotecarioId;
+    public void setBibliotecarioId(String bibliotecarioId) {
+        this.bibliotecario = bibliotecarioId;
     }
 
     public boolean isActivo() {

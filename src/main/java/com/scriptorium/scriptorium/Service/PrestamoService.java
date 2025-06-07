@@ -81,11 +81,13 @@ public class PrestamoService {
         }
 
         public PrestamoResponseDTO guardar(PrestamoRequestDTO dto) {
-                Usuario usuario = usuarioRepo.findById(dto.getUsuarioId())
+                Usuario usuario = usuarioRepo.findByNombre(dto.getUsuarioId())
                                 .orElseThrow(() -> new RuntimeException(USUARIO_NO_ENCONTRADO));
+
                 Libro libro = libroRepo.findById(dto.getLibroId())
                                 .orElseThrow(() -> new RuntimeException(LIBRO_NO_ENCONTRADO));
-                Bibliotecario bibliotecario = bibliotecarioRepo.findById(dto.getBibliotecarioId())
+
+                Bibliotecario bibliotecario = bibliotecarioRepo.findByNombre(dto.getBibliotecarioId())
                                 .orElseThrow(() -> new RuntimeException(BIBLIOTECARIO_NO_ENCONTRADO));
 
                 Inventario inventario = inventarioRepo.findByLibro(libro)
@@ -158,13 +160,14 @@ public class PrestamoService {
         public Optional<PrestamoResponseDTO> actualizar(Long id, PrestamoRequestDTO dto) {
                 return prestamoRepo.findById(id)
                                 .map(p -> {
-                                        Usuario usuario = usuarioRepo.findById(dto.getUsuarioId())
-                                                        .orElseThrow(() -> new RuntimeException(
-                                                                        USUARIO_NO_ENCONTRADO));
+                                        Usuario usuario = usuarioRepo.findByNombre(dto.getUsuarioId())
+                                                        .orElseThrow(() -> new RuntimeException(USUARIO_NO_ENCONTRADO));
+
                                         Libro libro = libroRepo.findById(dto.getLibroId())
                                                         .orElseThrow(() -> new RuntimeException(LIBRO_NO_ENCONTRADO));
+
                                         Bibliotecario bibliotecario = bibliotecarioRepo
-                                                        .findById(dto.getBibliotecarioId())
+                                                        .findByNombre(dto.getBibliotecarioId())
                                                         .orElseThrow(() -> new RuntimeException(
                                                                         BIBLIOTECARIO_NO_ENCONTRADO));
 
@@ -176,7 +179,6 @@ public class PrestamoService {
                                         p.setMultado(dto.isMultado());
                                         p.setDevuelto(dto.isDevuelto());
                                         p.setEstadoPrestamo(dto.getEstadoPrestamo());
-
                                         p.setFechaInicio(dto.getFechaInicio());
 
                                         Prestamo actualizado = prestamoRepo.save(p);
