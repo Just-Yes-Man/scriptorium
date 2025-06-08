@@ -19,7 +19,7 @@ public class Bibliotecario {
     @Column(length = 100)
     private String usuario;
     @Column(length = 200)
-    private String contraseña;
+    private String contrasena;
 
     @OneToMany(mappedBy = "bibliotecario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Prestamo> prestamos = new ArrayList<>();
@@ -41,11 +41,11 @@ public class Bibliotecario {
     }
 
     public String getContraseña() {
-        return contraseña;
+        return contrasena;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setContraseña(String contrasena) {
+        this.contrasena = contrasena;
     }
 
 }

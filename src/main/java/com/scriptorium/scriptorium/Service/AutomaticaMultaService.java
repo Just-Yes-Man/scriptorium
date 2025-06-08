@@ -106,7 +106,6 @@ public class AutomaticaMultaService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        // creadorMultas();
         List<PrestamoResponseDTO> prestamoList = prestamoService.listar();
         List<MultaResponseDTO> multaList = multaService.listar();
         fechaActual = LocalDate.now();

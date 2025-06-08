@@ -2,7 +2,7 @@ package com.scriptorium.scriptorium.dto;
 
 public class BibliotecarioRequestDTO {
     private String usuario;
-    private String contraseña;
+    private String contrasena;
 
     public String getUsuario() {
         return usuario;
@@ -13,11 +13,11 @@ public class BibliotecarioRequestDTO {
     }
 
     public String getContraseña() {
-        return contraseña;
+        return contrasena;
     }
 
     public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+        this.contrasena = contrasena;
     }
 
 }

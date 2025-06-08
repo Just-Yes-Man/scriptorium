@@ -1,8 +1,6 @@
 package com.scriptorium.scriptorium.infrastructure.repositories;
 
-import com.scriptorium.scriptorium.domain.Bibliotecario;
 import com.scriptorium.scriptorium.domain.Prestamo;
-import com.scriptorium.scriptorium.domain.Usuario;
 import com.scriptorium.scriptorium.dto.PrestamoResponseDTO;
 
 import java.util.List;
@@ -15,7 +13,4 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     @Query(value = "SELECT * FROM buscar_prestamos(:palabra)", nativeQuery = true)
     List<Object[]> buscarPrestamosRaw(@Param("palabra") String palabra);
 
-    Optional<Usuario> findByNombre(String nombre);
-
-    Optional<Bibliotecario> findByNombre(String nombre);
 }
