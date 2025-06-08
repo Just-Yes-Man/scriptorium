@@ -87,7 +87,7 @@ public class PrestamoService {
                 Libro libro = libroRepo.findById(dto.getLibroId())
                                 .orElseThrow(() -> new RuntimeException(LIBRO_NO_ENCONTRADO));
 
-                Bibliotecario bibliotecario = bibliotecarioRepo.findByNombre(dto.getBibliotecarioId())
+                Bibliotecario bibliotecario = bibliotecarioRepo.findByUsuario(dto.getBibliotecarioId())
                                 .orElseThrow(() -> new RuntimeException(BIBLIOTECARIO_NO_ENCONTRADO));
 
                 Inventario inventario = inventarioRepo.findByLibro(libro)
@@ -167,7 +167,7 @@ public class PrestamoService {
                                                         .orElseThrow(() -> new RuntimeException(LIBRO_NO_ENCONTRADO));
 
                                         Bibliotecario bibliotecario = bibliotecarioRepo
-                                                        .findByNombre(dto.getBibliotecarioId())
+                                                        .findByUsuario(dto.getBibliotecarioId())
                                                         .orElseThrow(() -> new RuntimeException(
                                                                         BIBLIOTECARIO_NO_ENCONTRADO));
 
