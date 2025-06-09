@@ -238,6 +238,7 @@ public class PrestamoService {
                 if (prestamo.isDevuelto()) {
                         throw new RuntimeException(YA_DEVUELTO);
                 }
+                
 
                 Libro libro = prestamo.getLibro();
                 Inventario inventario = inventarioRepo.findByLibro(libro)
@@ -254,10 +255,14 @@ public class PrestamoService {
                 int nivelPrestado = EstadoLibroMap.obtenerNivelEstado(estadoPrestado);
                 int nivelDevuelto = EstadoLibroMap.obtenerNivelEstado(estadoDevuelto);
 
-                if (nivelDevuelto > nivelPrestado) {
-                        prestamo.setMultado(true);
-                        generarMultaPorEstadoDevuelto(prestamo);
-                } else {
+               if (nivelDevuelto > nivelPrestado) {
+                prestamo.setMultado(true);
+                try {
+                 generarMultaPorEstadoDevuelto(prestamo);
+                 } catch (Exception e) {
+                System.out.println("Error al generar multa: " + e.getMessage());
+                         }
+                        } else {
                         prestamo.setDevuelto(true);
                         prestamo.setActivo(false);
                 }
