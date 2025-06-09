@@ -1,6 +1,7 @@
 package com.scriptorium.scriptorium.web;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -112,5 +113,18 @@ public class PrestamoControl {
             return ResponseEntity.badRequest().body(
                     new ApiResponse<>(400, "Error al pagar multa: " + ex.getMessage(), null));
         }
+    }
+
+    @PostMapping("/monto-multa")
+    public ResponseEntity<?> obtenerMontoMulta(@RequestBody Map<String, Integer> body) {
+        Integer idPrestamo = body.get("idPrestamo");
+
+        if (idPrestamo == null) {
+            return ResponseEntity.badRequest().body("El campo 'idPrestamo' es obligatorio");
+        }
+
+        return service.obtenerMontoMulta(idPrestamo)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElse(ResponseEntity.ok("Este préstamo no tiene multa"));
     }
 }

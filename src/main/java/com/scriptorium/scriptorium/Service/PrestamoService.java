@@ -1,11 +1,14 @@
 package com.scriptorium.scriptorium.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.scriptorium.scriptorium.domain.Prestamo;
@@ -33,15 +36,17 @@ public class PrestamoService {
         private final LibroRepository libroRepo;
         private final BibliotecarioRepository bibliotecarioRepo;
         private final InventarioRepository inventarioRepo;
+        private final JdbcTemplate jdbcTemplate;
 
         public PrestamoService(PrestamoRepository prestamoRepo, UsuarioRepository usuarioRepo,
                         LibroRepository libroRepo, BibliotecarioRepository bibliotecarioRepo,
-                        InventarioRepository inventarioRepo) {
+                        InventarioRepository inventarioRepo, JdbcTemplate jdbcTemplate) {
                 this.prestamoRepo = prestamoRepo;
                 this.usuarioRepo = usuarioRepo;
                 this.libroRepo = libroRepo;
                 this.bibliotecarioRepo = bibliotecarioRepo;
                 this.inventarioRepo = inventarioRepo;
+                this.jdbcTemplate = jdbcTemplate;
         }
 
         public List<PrestamoResponseDTO> buscarPrestamos(String palabra) {
@@ -238,7 +243,6 @@ public class PrestamoService {
                 if (prestamo.isDevuelto()) {
                         throw new RuntimeException(YA_DEVUELTO);
                 }
-                
 
                 Libro libro = prestamo.getLibro();
                 Inventario inventario = inventarioRepo.findByLibro(libro)
@@ -255,14 +259,14 @@ public class PrestamoService {
                 int nivelPrestado = EstadoLibroMap.obtenerNivelEstado(estadoPrestado);
                 int nivelDevuelto = EstadoLibroMap.obtenerNivelEstado(estadoDevuelto);
 
-               if (nivelDevuelto > nivelPrestado) {
-                prestamo.setMultado(true);
-                try {
-                 generarMultaPorEstadoDevuelto(prestamo);
-                 } catch (Exception e) {
-                System.out.println("Error al generar multa: " + e.getMessage());
-                         }
-                        } else {
+                if (nivelDevuelto > nivelPrestado) {
+                        prestamo.setMultado(true);
+                        try {
+                                generarMultaPorEstadoDevuelto(prestamo);
+                        } catch (Exception e) {
+                                System.out.println("Error al generar multa: " + e.getMessage());
+                        }
+                } else {
                         prestamo.setDevuelto(true);
                         prestamo.setActivo(false);
                 }
@@ -316,6 +320,17 @@ public class PrestamoService {
                                 actualizado.getEstadoDevuelto(),
                                 actualizado.getFechaInicio(),
                                 actualizado.getFechaFin());
+        }
+
+        public Optional<BigDecimal> obtenerMontoMulta(int idPrestamo) {
+                String sql = "SELECT obtener_monto_multa(?)";
+
+                try {
+                        BigDecimal monto = jdbcTemplate.queryForObject(sql, BigDecimal.class, idPrestamo);
+                        return Optional.ofNullable(monto);
+                } catch (EmptyResultDataAccessException e) {
+                        return Optional.empty();
+                }
         }
 
 }
