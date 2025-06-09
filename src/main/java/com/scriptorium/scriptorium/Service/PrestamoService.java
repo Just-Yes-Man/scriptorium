@@ -81,7 +81,8 @@ public class PrestamoService {
         }
 
         public PrestamoResponseDTO guardar(PrestamoRequestDTO dto) {
-                Usuario usuario = usuarioRepo.findByNombre(dto.getUsuarioId())
+                System.out.println(dto.getUsuario());
+                Usuario usuario = usuarioRepo.findByNombre(dto.getUsuario())
                                 .orElseThrow(() -> new RuntimeException(USUARIO_NO_ENCONTRADO));
 
                 Libro libro = libroRepo.findById(dto.getLibroId())
@@ -160,7 +161,7 @@ public class PrestamoService {
         public Optional<PrestamoResponseDTO> actualizar(Long id, PrestamoRequestDTO dto) {
                 return prestamoRepo.findById(id)
                                 .map(p -> {
-                                        Usuario usuario = usuarioRepo.findByNombre(dto.getUsuarioId())
+                                        Usuario usuario = usuarioRepo.findByNombre(dto.getUsuario())
                                                         .orElseThrow(() -> new RuntimeException(USUARIO_NO_ENCONTRADO));
 
                                         Libro libro = libroRepo.findById(dto.getLibroId())

@@ -25,12 +25,12 @@ public class PrestamoRequestDTO {
         this.ficha = ficha;
     }
 
-    public String getUsuarioId() {
+    public String getUsuario() {
         return usuario;
     }
 
-    public void setUsuarioId(String usuarioId) {
-        this.usuario = usuarioId;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public Long getLibroId() {
@@ -45,8 +45,8 @@ public class PrestamoRequestDTO {
         return bibliotecario;
     }
 
-    public void setBibliotecarioId(String bibliotecarioId) {
-        this.bibliotecario = bibliotecarioId;
+    public void setBibliotecario(String bibliotecario) {
+        this.bibliotecario = bibliotecario;
     }
 
     public boolean isActivo() {
