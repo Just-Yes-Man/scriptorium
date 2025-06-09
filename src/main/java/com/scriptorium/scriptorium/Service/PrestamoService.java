@@ -222,6 +222,15 @@ public class PrestamoService {
                 multaService.guardar(multaDTO);
         }
 
+        public void marcarComoMultado(Long idPrestamo) {
+                Optional<Prestamo> prestamoOpt = prestamoRepo.findById(idPrestamo);
+                if (prestamoOpt.isPresent()) {
+                        Prestamo prestamo = prestamoOpt.get();
+                        prestamo.setMultado(true);
+                        prestamoRepo.save(prestamo);
+                }
+        }
+
         public PrestamoResponseDTO devolverLibro(Long prestamoId, String estadoD) {
                 Prestamo prestamo = prestamoRepo.findById(prestamoId)
                                 .orElseThrow(() -> new RuntimeException(PRESTAMO_NO_ENCONTRADO));

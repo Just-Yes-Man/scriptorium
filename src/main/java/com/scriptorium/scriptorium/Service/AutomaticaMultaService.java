@@ -130,8 +130,10 @@ public class AutomaticaMultaService implements ApplicationRunner {
                 multaDTO.setFechaMulta(fechaActual);
 
                 multaService.guardar(multaDTO);
-            }
 
+                // Aquí marcamos el préstamo como multado
+                prestamoService.marcarComoMultado(prestamo.getIdPrestamo());
+            }
         }
     }
 
