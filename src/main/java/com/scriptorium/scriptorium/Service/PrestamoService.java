@@ -219,12 +219,13 @@ public class PrestamoService {
                 }
 
                 MultaRequestDTO multaDTO = new MultaRequestDTO();
-                multaDTO.setTipoMultaId(2); // Tipo 2: Multa por estado devuelto
+                multaDTO.setTipoMultaId(3); // Tipo 3: Multa por estado devuelto
                 multaDTO.setPrestamoId(prestamo.getIdPrestamo());
                 multaDTO.setMonto((float) libro.getPrecio());
                 multaDTO.setFechaMulta(LocalDate.now());
 
                 multaService.guardar(multaDTO);
+                System.out.println("MULTA GENERADA");
         }
 
         public void marcarComoMultado(Long idPrestamo) {
