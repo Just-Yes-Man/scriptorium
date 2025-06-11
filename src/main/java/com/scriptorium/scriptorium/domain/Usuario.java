@@ -26,7 +26,7 @@ public class Usuario {
     private String direccion;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
-    @Column(length = 20)
+    @Column(length = 50)
     private String contacto;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
